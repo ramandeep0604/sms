@@ -19,9 +19,8 @@ const UserSchema= new mongoose.Schema({
         required :[true,"Password is required"]
     },
     role:{
-        type:String,
-        enum:['admin','resident','security_guard'],
-        default:'admin'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Role"
     },
     isActive:{
         type: Boolean,
