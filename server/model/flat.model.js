@@ -1,4 +1,4 @@
-import mongoose,{mongoose} from "mongoose"
+import mongoose from "mongoose"
 const FlatSchema= new mongoose.Schema({
     flatNumber:{
         type:Number,
@@ -11,5 +11,5 @@ const FlatSchema= new mongoose.Schema({
     }
     
 })
-const Flat=mongoose.model('Flat',flatSchema)
+const Flat = mongoose.model('Flat', FlatSchema);
 export default Flat;

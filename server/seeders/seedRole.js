@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import Role from "../model/role.model.js"
+import bcrypt from "bcrypt";
 
 
 
-const roles = [{ role: 'admin', roleDescription: "Manage user , Assign flat to resident, generate bills, manage complaints", password : brcypt.hash('raman18113114',10)
+const roles = [{ role: 'admin', roleDescription: "Manage user , Assign flat to resident, generate bills, manage complaints", password: await bcrypt.hash('raman18113114', 10)
 
  },
 { role: 'resident', roleDescription: 'Raise complaints,accept visitor entry' },
