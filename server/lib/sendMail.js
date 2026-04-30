@@ -1,13 +1,16 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
+
+console.log("FORCED CONFIG USED ✅");
+
 const transporter = nodemailer.createTransport({
-  host : process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure:false,
-  auth:{
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD
-  }
-  
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "ramandeepkaur4619@gmail.com",
+    pass: "gjmpdyaqsyftlodq",
+  },
 });
 
 export default transporter;
+

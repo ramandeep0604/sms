@@ -1,22 +1,23 @@
+import dotenv from "dotenv";
+dotenv.config(); // ✅ MUST be first
+
 import express from "express";
-import dotenv from "dotenv"
 import connectDb from "./db/config.js";
-import authRoutes from "./route/auth.routes.js"
-const app=express();
+import authRoutes from "./route/auth.routes.js";
+import cors from "cors";
 
-dotenv.config()
-app.use(express.json())
-connectDb()
+const app = express();
+app.use(cors());
 
-app.get('/health',(req,res)=>{
-    res.send("health is ok")
+app.use(express.json());
+connectDb();
 
-})
-app.use('/api/v1/auth',authRoutes)
+app.get('/health', (req, res) => {
+  res.send("health is ok");
+});
 
-app.listen(3000,()=>{
-console.log("server is running");
+app.use('/api/v1/auth', authRoutes);
 
-})
-
-
+app.listen(3000, () => {
+  console.log("server is running");
+});
