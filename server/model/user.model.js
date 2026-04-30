@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role"
     },
+    phone:{
+        type:Number,
+    },
     isActive: {
         type: Boolean,
         default: true

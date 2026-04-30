@@ -5,7 +5,7 @@ import authRoutes from "./route/auth.routes.js"
 const app=express();
 
 dotenv.config()
-
+app.use(express.json())
 connectDb()
 
 app.get('/health',(req,res)=>{
