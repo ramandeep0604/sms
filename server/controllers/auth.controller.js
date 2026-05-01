@@ -99,10 +99,11 @@
 import Role from "../model/role.model.js";
 import User from "../model/user.model.js";
 import Flat from "../model/flat.model.js";
-import { generateHash } from "../lib/hashPassword.js";
+import { comparePassword, generateHash } from "../lib/hashPassword.js";
 import { generatePassword } from "../lib/generatePassword.js";
 import transporter from "../lib/sendMail.js";
 import { newUserRegistrationTemplate } from "../templates/NewUserResgistration.js";
+import { generateToken } from "../lib/generateToken.js";
 
 // ================= REGISTER =================
 export const register = async (req, res) => {
@@ -193,7 +194,30 @@ export const register = async (req, res) => {
 // ================= LOGIN =================
 export const login = async (req, res) => {
   try {
-    // (You can implement login logic here)
+    const{email, password}=req.body;
+    const user = await User.findOne({email}).populate('role')
+console.log(user)
+    if(!user){
+      return res.status(400).json({  message : "user is not registered, please try again"})
+    }
+    const isPasswordMatch = await comparePassword(password, user.password) 
+    if(!isPasswordMatch){
+       return res.status(401).json({
+        message:"password is incorrect"
+      })
+    }
+    const payload = {id: user._id ,name:user.name, email : user.email , role: user.role.role}
+     const token = generateToken(payload)
+     console.log(token)
+    res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,   // 👈 FIX THIS
+  sameSite: "lax",
+  maxAge: 90000
+});
+     res.status(200).json({
+      message:"login successfully"
+     })
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
@@ -201,3 +225,6 @@ export const login = async (req, res) => {
     });
   }
 };
+export const verify = async(req,res)=>{
+res.send ('running')
+}
