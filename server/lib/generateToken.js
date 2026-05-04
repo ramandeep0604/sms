@@ -1,6 +1,13 @@
-import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken'
 
 
-export const generateToken=(payload)=>{
-return jwt.sign(payload,process.env.JWT_SECRET_STRING,{expiresIn:process.env.JWT_EXPIRES_IN})
-}
+// export const generateToken=(payload)=>{
+// return jwt.sign(payload,process.env.JWT_SECRET_STRING,{expiresIn:process.env.JWT_EXPIRES_IN})
+// // }
+import jwt from "jsonwebtoken";
+
+export const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET_STRING, {
+    expiresIn: process.env.JWT_EXPIRES_IN || "1d",
+  });
+};
