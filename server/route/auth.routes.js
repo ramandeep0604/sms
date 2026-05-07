@@ -22,7 +22,7 @@ route.post("/register", register);
 route.post("/login", login);
 
 // ✅ FIXED ROUTE FLOW
-route.get(
+route.post(
   "/verify",
   verifyToken,
   checkRole(["admin", "resident"]),

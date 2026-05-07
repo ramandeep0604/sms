@@ -238,63 +238,121 @@ export const register = async (req, res) => {
 //     });
 //   }
 // };
-export const login = async (req, res) => {
+// export const login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     // ✅ Find user and populate role
+//     const user = await User.findOne({ email }).populate("role");
+//     console.log("USER:", user);
+
+//     if (!user) {
+//       return res.status(400).json({
+//         message: "User is not registered, please try again",
+//       });
+//     }
+
+//     // ✅ Check password
+//     const isPasswordMatch = await comparePassword(password, user.password);
+
+//     if (!isPasswordMatch) {
+//       return res.status(401).json({
+//         message: "Password is incorrect",
+//       });
+//     }
+
+//     // ✅ FIX: ensure role exists
+//     if (!user.role || !user.role.role) {
+//       return res.status(500).json({
+//         message: "User role not properly assigned",
+//       });
+//     }
+
+//     // ✅ PAYLOAD (THIS WAS YOUR QUESTION AREA)
+//     const payload = {
+//       id: user._id,
+//       name: user.name,
+//       email: user.email,
+//       role: user.role.role, // ✅ MUST be string (admin/resident/etc)
+//     };
+
+//     // ✅ Generate token
+//     const token = generateToken(payload);
+//     console.log("TOKEN:", token);
+
+//     // ✅ Set cookie
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: false, // 🔴 change to true in production (HTTPS)
+//       sameSite: "lax",
+//       maxAge: 24 * 60 * 60 * 1000, // ✅ 1 day (your 90000 was too small)
+//     });
+
+//     // ✅ Response (include token for Postman testing)
+//     return res.status(200).json({
+//       message: "Login successfully",
+//       token,
+//     });
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Server error",
+//       error: error.message,
+//     });
+//   }
+// };
+ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // ✅ Find user and populate role
-    const user = await User.findOne({ email }).populate("role");
-    console.log("USER:", user);
+    console.log("REQ BODY:", req.body);
+
+    const user = await User.findOne({
+      email: email.trim().toLowerCase(), // ✅ normalize
+    }).populate("role");
+
+    console.log("FOUND USER:", user);
 
     if (!user) {
       return res.status(400).json({
-        message: "User is not registered, please try again",
+        message: `No user found with email: ${email}`,
       });
     }
 
-    // ✅ Check password
     const isPasswordMatch = await comparePassword(password, user.password);
+
+    console.log("PASSWORD MATCH:", isPasswordMatch);
 
     if (!isPasswordMatch) {
       return res.status(401).json({
         message: "Password is incorrect",
       });
     }
+    
 
-    // ✅ FIX: ensure role exists
-    if (!user.role || !user.role.role) {
-      return res.status(500).json({
-        message: "User role not properly assigned",
-      });
-    }
-
-    // ✅ PAYLOAD (THIS WAS YOUR QUESTION AREA)
     const payload = {
       id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role.role, // ✅ MUST be string (admin/resident/etc)
+      role: user.role.role,
     };
 
-    // ✅ Generate token
     const token = generateToken(payload);
-    console.log("TOKEN:", token);
 
-    // ✅ Set cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // 🔴 change to true in production (HTTPS)
+      secure: false,
       sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000, // ✅ 1 day (your 90000 was too small)
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // ✅ Response (include token for Postman testing)
     return res.status(200).json({
       message: "Login successfully",
       token,
     });
 
   } catch (error) {
+    console.log("ERROR:", error);
     return res.status(500).json({
       message: "Server error",
       error: error.message,
@@ -302,19 +360,25 @@ export const login = async (req, res) => {
   }
 };
 
-
 // ================= VERIFY =================
 
 export const verify = async (req, res) => {
+  console.log(req.user)
+
   try {
     return res.status(200).json({
       message: "Token verified successfully",
       user: req.user, // ✅ comes from verifyToken middleware
+      authenticated:true
+    
     });
+
+     
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
       error: error.message,
     });
   }
+
 };

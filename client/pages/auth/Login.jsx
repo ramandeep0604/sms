@@ -1,31 +1,38 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
-
+import { login } from "../../redux/slice/AuthSlice";
+import {useDispatch} from 'react-redux'
 const Login = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  console.log(formData)
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+const [loading , setLoading]= useState(false);
+const [error , setError]= useState('');
+const [message , setMessage]= useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await loginUser(form);
-      alert(res.data.message);
 
-      // 👉 Redirect after login
-      navigate("/dashboard");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
-    }
-  };
+const handleChange= (e)=>{
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  })
+  setError('')
+}
+const handleSubmit = async(e)=>{
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+    setMessage('');
+    dispatch(login(formData))
+  
+}
 
   return (
     <div className="login-page-wrapper">

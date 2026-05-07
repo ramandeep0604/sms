@@ -6,6 +6,9 @@ import connectDb from "./db/config.js";
 import authRoutes from "./route/auth.routes.js";
 import cors from "cors";
 import cookieParser from 'cookie-parser'
+import roleRoutes from "./route/role.routes.js";
+import flatRoutes from "./route/flat.routes.js";
+import userRoutes from "./route/user.routes.js";
 
 const app = express();
 app.use(cors({
@@ -22,6 +25,9 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/v1/auth', authRoutes);
+app.use("/api/v1/roles", roleRoutes);
+app.use("/api/v1/flats", flatRoutes);
+app.use("/api/v1/users", userRoutes);
 
 app.listen(3000, () => {
   console.log("server is running");
