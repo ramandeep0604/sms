@@ -44,3 +44,11 @@ export const deleteFlat = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// get available flat
+export const getAvailableFlat= async(req,res)=>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}

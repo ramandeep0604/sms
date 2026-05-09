@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
 import { login } from "../../redux/slice/AuthSlice";
-import {useDispatch} from 'react-redux'
+import {useDispatch , useSelector} from 'react-redux'
 const Login = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const {loading}  = useSelector((state)=>state.auth)
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const Login = () => {
   });
   console.log(formData)
 
-const [loading , setLoading]= useState(false);
+// const [loading , setLoading]= useState(false);
 const [error , setError]= useState('');
 const [message , setMessage]= useState('');
 
@@ -25,14 +26,22 @@ const handleChange= (e)=>{
   })
   setError('')
 }
-const handleSubmit = async(e)=>{
-  e.preventDefault();
-  setLoading(true);
-  setError('');
-    setMessage('');
-    dispatch(login(formData))
+// const handleSubmit = async(e)=>{
+//   e.preventDefault();
+//   setLoading(true);
+//   setError('');
+//     setMessage('');
+//     dispatch(login(formData))
   
-}
+// }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setError("");
+  setMessage("");
+
+  dispatch(login(formData));
+};
 
   return (
     <div className="login-page-wrapper">
@@ -139,7 +148,9 @@ const handleSubmit = async(e)=>{
                 type="submit"
                 className="login-submit-btn"
               >
-                Sign In
+               {/* //{loading ? 'verifying account...': 'Sign In'} Sign In */}
+               {loading ? 'Verifying Account...' : 'Sign In'}
+                
               </button>
             </form>
 
