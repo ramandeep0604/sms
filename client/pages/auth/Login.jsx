@@ -40,7 +40,47 @@ const handleSubmit = async (e) => {
   setError("");
   setMessage("");
 
-  dispatch(login(formData));
+  try {
+
+    const resultAction = await dispatch(login(formData));
+
+    console.log("LOGIN RESULT:", resultAction);
+
+    if (login.fulfilled.match(resultAction)) {
+
+      const role = resultAction.payload.user.role;
+
+      console.log("ROLE:", role);
+
+      if (role === "admin") {
+        navigate("/admindashboard");
+      }
+
+      else if (role === "resident") {
+        navigate("/residentdashboard");
+      }
+
+      else if (role === "guard") {
+        navigate("/guarddashboard");
+      }
+
+      else {
+        navigate("/login");
+      }
+
+    } else {
+
+      setError(
+        resultAction.payload?.message || "Login Failed"
+      );
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    setError("Something went wrong");
+  }
 };
 
   return (

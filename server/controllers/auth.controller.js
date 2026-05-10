@@ -343,7 +343,7 @@ export const register = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge:  new Date (Date.now()+24 * 60 * 60 * 1000),
     });
 
     return res.status(200).json({
@@ -382,3 +382,18 @@ export const verify = async (req, res) => {
   }
 
 };
+// logout
+export const logout = async(req,res)=>{
+  try {
+    res.cookie('token',null , {maxAge:0}
+
+    )
+    res.send(200).json({
+      authenticated:false,
+      message:"logout succesfull"
+    })
+    
+  } catch (error) {
+    
+  }
+}

@@ -1,38 +1,12 @@
-// import React from 'react'
-// import { Routes, Route } from "react-router-dom";
-// import Login from '../pages/auth/Login';
-// import Register from '../pages/auth/Register';
-// import AdminDashboard from '../pages/dashboard/AdminDashboard';
-// import ProtectedRoutes from '../pages/dashboard/ProtectedRoutes';
-// import { OpenRoutes } from '../pages/dashboard/OpenRoutes';
-
-
-// const AppRoutes = () => {
-//   return (
-//     <div>
-//       <Routes>
-//         <Route element={<OpenRoutes/>}>
-//         <Route path = '/login' element={<Login/>}/>
-//         </Route>
-//         <Route path = '/register' element={<Register/>}/>
-//         <Route element={<ProtectedRoutes/>}>
-//         <Route path = '/admindashboard' element={<AdminDashboard/>}/>
-// </Route>
-
-//       </Routes>
-//     </div>
-//   )
-// }
-
-// export default AppRoutes
-
 import React from 'react'
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 
 import AdminDashboard from '../pages/dashboard/AdminDashboard';
+import ResidentDashboard from '../pages/dashboard/ResidentDashboard';
+import GuardDashboard from '../pages/dashboard/GuardDashboard';
 
 import ProtectedRoutes from '../pages/dashboard/ProtectedRoutes';
 import OpenRoutes from '../pages/dashboard/OpenRoutes';
@@ -40,6 +14,8 @@ import OpenRoutes from '../pages/dashboard/OpenRoutes';
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Root redirect */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
 
       {/* Public Routes */}
       <Route element={<OpenRoutes />}>
@@ -47,14 +23,23 @@ const AppRoutes = () => {
         <Route path="/register" element={<Register />} />
       </Route>
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoutes />}>
+      {/* Protected Routes by Role */}
+      <Route element={<ProtectedRoutes allowedRoles={['admin']} />}>
         <Route path="/admindashboard" element={<AdminDashboard />} />
       </Route>
 
+      <Route element={<ProtectedRoutes allowedRoles={['resident']} />}>
+        <Route path="/residentdashboard" element={<ResidentDashboard />} />
+      </Route>
+
+      <Route element={<ProtectedRoutes allowedRoles={['guard']} />}>
+        <Route path="/guarddashboard" element={<GuardDashboard />} />
+      </Route>
+
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }
 
 export default AppRoutes
-

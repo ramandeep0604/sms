@@ -1,18 +1,6 @@
-// import express from "express";
 
-// const route = express.Router();
-// import{register,login , verify} from "../controllers/auth.controller.js"
-// import verifyToken from "../middleware/verifyToken.js";
-// import { checkRole } from "../middleware/checkRole.js";
-
-
-// route.post('/register',register);
-// route.post('/login',login);
-// route.post('/verify',verifyToken,checkRole(['admin','resident']), verify)
-
-// export default route;
 import express from "express";
-import { register, login, verify } from "../controllers/auth.controller.js";
+import { register, login, verify, logout } from "../controllers/auth.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { checkRole } from "../middleware/checkRole.js";
 
@@ -25,8 +13,9 @@ route.post("/login", login);
 route.post(
   "/verify",
   verifyToken,
-  checkRole(["admin", "resident"]),
+  checkRole(["admin", "resident", "guard"]),
   verify
 );
+route.post('/logout',verifyToken , logout)
 
 export default route;

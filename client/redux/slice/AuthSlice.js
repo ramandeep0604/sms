@@ -101,11 +101,21 @@ const initialState = {
   user: null,
   loading: false,
   error: null,
-  isAuthenticated: false,
-  name: null,
-  email: null,
-  role: null,
+  message:null,
+  isAuthenticated: Cookies.get('isAuthenticated')||null,
+  name: Cookies.get('name') || null,
+  email: Cookies.get('email') ||  null,
+  role:  Cookies.get('role') || null,
 };
+// logout thunk
+export const logout =createAsyncThunk('/auth_logout',async(_, thunkApi)=>{
+try {
+  const res =await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`);
+  return res.data
+} catch (error) {
+  
+}
+})
 
 // LOGIN THUNK
 export const login = createAsyncThunk(
@@ -185,7 +195,27 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      //logout
+      .addCase(logout.pending,(state,action)=>{
+
+      })
+       .addCase(logout.fulfilled,(state,action)=>{
+       
+
+  state.user = null;
+  state.isAuthenticated = false;
+  state.name = null;
+  state.email = null;
+  state.role = null;
+
+  Cookies.remove('name');
+  Cookies.remove('email');
+  Cookies.remove('role');
+  Cookies.remove('isAuthenticated');
+
+        console.log(action.payload)
+      })
   },
 });
 
