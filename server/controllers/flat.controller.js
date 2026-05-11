@@ -1,54 +1,122 @@
 import Flat from "../model/flat.model.js";
 
-// CREATE
+// CREATE FLAT
 export const createFlat = async (req, res) => {
   try {
-    const flat = await Flat.create(req.body);
-    res.status(201).json(flat);
+    const { flatNumber, block, floor } = req.body;
+
+    // check existing flat
+    const existingFlat = await Flat.findOne({
+      flatNumber,
+      block,
+    });
+
+    if (existingFlat) {
+      return res.status(400).json({
+        message: "Flat already exists",
+      });
+    }
+
+    // create flat
+    const flat = await Flat.create({
+      flatNumber,
+      block,
+      floor,
+    });
+
+    res.status(201).json({
+      message: "Flat created successfully",
+      data: flat,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
-// GET ALL
+// GET ALL FLATS
 export const getFlats = async (req, res) => {
   try {
     const flats = await Flat.find();
-    res.status(200).json(flats);
+
+    res.status(200).json({
+      message: "success",
+      data: flats,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
-// UPDATE
+// UPDATE FLAT
 export const updateFlat = async (req, res) => {
   try {
+    const { id } = req.params;
+
     const flat = await Flat.findByIdAndUpdate(
-      req.params.id,
+      id,
       req.body,
       { new: true }
     );
 
-    res.status(200).json(flat);
+    if (!flat) {
+      return res.status(404).json({
+        message: "Flat not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Flat updated successfully",
+      data: flat,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
-// DELETE
+// DELETE FLAT
 export const deleteFlat = async (req, res) => {
   try {
-    await Flat.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Flat deleted" });
+    const { id } = req.params;
+
+    const flat = await Flat.findByIdAndDelete(id);
+
+    if (!flat) {
+      return res.status(404).json({
+        message: "Flat not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Flat deleted successfully",
+      data: flat,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
-// get available flat
-export const getAvailableFlat= async(req,res)=>{
+
+// GET AVAILABLE FLATS
+export const getAvailableFlat = async (req, res) => {
   try {
-    
+    const flats = await Flat.find({
+      isOccupied: false,
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: flats,
+    });
   } catch (error) {
-    
+    res.status(500).json({
+      error: error.message,
+    });
   }
-}
+};
